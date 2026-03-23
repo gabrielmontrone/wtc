@@ -6,7 +6,5 @@ import java.util.List;
 
 public interface MessageRepository extends MongoRepository<MessageDocument, String> {
 
-    // Esta linha permite que você busque o histórico de mensagens de um cliente
-    List<MessageDocument> findByCustomerId(String customerId);
-
+    List<MessageDocument> findByConversationIdOrderByCreatedAtAsc(String conversationId);
 }

@@ -29,10 +29,10 @@ public class MessageController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    // --- MTD Historico---
-    @GetMapping("/customer/{customerId}")
-    public ResponseEntity<List<MessageResponse>> getHistory(@PathVariable String customerId) {
-        List<MessageResponse> history = listMessageService.execute(customerId);
+    // --- MTD Historico de conversas ---
+    @GetMapping("/conversation/{conversationId}")
+    public ResponseEntity<List<MessageResponse>> getHistory(@PathVariable String conversationId) {
+        var history = listMessageService.execute(conversationId);
         return ResponseEntity.ok(history);
     }
 }

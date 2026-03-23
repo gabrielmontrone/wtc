@@ -12,9 +12,9 @@ public class ListMessageService {
     @Autowired
     private MessageRepository repository;
 
-    public List<MessageResponse> execute(String customerId) {
+    public List<MessageResponse> execute(String conversationId) {
         // Busca as mensagens no banco e transforma em DTO para o frontend
-        return repository.findByCustomerId(customerId)
+        return repository.findByConversationIdOrderByCreatedAtAsc(conversationId)
                 .stream()
                 .map(msg -> new MessageResponse(
                         msg.getId(),
