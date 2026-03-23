@@ -24,6 +24,8 @@ public class MessageDocument {
     private String failureReason;
     private Instant createdAt;
 
+    private String conversationId;
+
     public MessageDocument() {
     }
 
@@ -109,5 +111,13 @@ public class MessageDocument {
 
     public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public String getConversationId() {
+        return conversationId;
+    }
+
+    public void setConversationId(String conversationId) {
+        this.conversationId = conversationId;
     }
 }
