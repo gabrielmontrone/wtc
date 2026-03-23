@@ -10,6 +10,7 @@ public class UserDocument {
     private String id;
     private String email;
     private String password;
+    private String role;
 
     public String getId() {
         return id;
