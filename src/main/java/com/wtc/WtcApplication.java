@@ -14,7 +14,7 @@ public class WtcApplication {
         SpringApplication.run(WtcApplication.class, args);
     }
 
-    // ISSO AQUI CRIA UM USUÁRIO DE TESTE AUTOMATICAMENTE NO BANCO
+    // CRIA UM USUÁRIO DE TESTE AUTOMATICAMENTE NO BANCO
     @Bean
     CommandLineRunner init(UserRepository userRepository) {
         return args -> {
