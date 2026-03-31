@@ -30,10 +30,12 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // API sem estado (usando JWT)
                 .authorizeHttpRequests(authorize -> authorize
                         // Libera o acesso ao login (Senão ninguém consegue entrar!)
-                        .requestMatchers(HttpMethod.POST, "/api/v1/auth/login").permitAll()
+                        // .requestMatchers(HttpMethod.POST, "/api/v1/auth/login").permitAll() -> momentaneo
 
                         // Bloqueia todo o resto (Exige token para ver histórico, mensagens, etc)
-                        .anyRequest().authenticated()
+                        // .anyRequest().authenticated() -> momentaneo
+
+                        .anyRequest().permitAll()
                 )
                 // Coloca o SEU filtro antes do filtro padrão do Spring
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
