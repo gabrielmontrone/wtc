@@ -10,6 +10,8 @@ public class CustomerDocument {
     @Id
     private String id;
 
+    private Integer score;
+
     private String name;
     private String document;
 
@@ -18,6 +20,13 @@ public class CustomerDocument {
     private Boolean ativo;
 
     private LocalDateTime createdAt;
+
+    public Integer getScore() {
+        return score;
+    }
+    public void setScore(Integer score) {
+        this.score = score;
+    }
 
     public String getId() {
         return id;
