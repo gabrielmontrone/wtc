@@ -29,13 +29,9 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable()) // Desativa CSRF (padrão para APIs REST)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // API sem estado (usando JWT)
                 .authorizeHttpRequests(authorize -> authorize
-                        // Libera o acesso ao login (Senão ninguém consegue entrar!)
-                        // .requestMatchers(HttpMethod.POST, "/api/v1/auth/login").permitAll() -> momentaneo
-
-                        // Bloqueia todo o resto (Exige token para ver histórico, mensagens, etc)
-                        // .anyRequest().authenticated() -> momentaneo
-
-                        .anyRequest().permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/auth/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/auth/register").permitAll() // ADICIONE ESTA LINHA
+                        .anyRequest().authenticated()
                 )
                 // Coloca o SEU filtro antes do filtro padrão do Spring
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
@@ -46,4 +42,10 @@ public class SecurityConfig {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
+
+    @Bean
+    public org.springframework.security.crypto.password.PasswordEncoder passwordEncoder() {
+        return new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder();
+    }
+
 }
