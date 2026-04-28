@@ -19,6 +19,7 @@ public class CustomerDocument {
 
     private LocalDateTime createdAt;
 
+
     public String getId() {
         return id;
     }
@@ -73,5 +74,5 @@ public class CustomerDocument {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
-    }
+    } 
 }
