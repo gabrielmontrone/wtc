@@ -2,6 +2,7 @@ package com.wtc.auth;
 
 import com.wtc.auth.dto.LoginRequest;
 import com.wtc.auth.dto.LoginResponse;
+import com.wtc.auth.dto.RegisterRequest;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,4 +25,11 @@ public class AuthController {
         var response = authService.login(data);
         return ResponseEntity.ok(response);
     }
+
+    @PostMapping("/register")
+    public ResponseEntity<String> register(@RequestBody @Valid RegisterRequest data) {
+        this.authService.register(data);
+        return ResponseEntity.ok("Usuário cadastrado com sucesso!");
+    }
+
 }
