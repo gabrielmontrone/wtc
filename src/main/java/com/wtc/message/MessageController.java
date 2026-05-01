@@ -24,9 +24,9 @@ public class MessageController {
 
     private final ListMessageService listMessageService;
 
-    public MessageController(SendMessageService sendMessageService) {
+    public MessageController(SendMessageService sendMessageService, ListMessageService listMessageService) {
         this.sendMessageService = sendMessageService;
-        this.listMessageService = new ListMessageService();
+        this.listMessageService = listMessageService;
     }
 
     @PostMapping

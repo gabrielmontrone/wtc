@@ -23,6 +23,7 @@ public class SendMessageService {
         document.setTargetType(request.targetType());
         document.setSubject(request.subject());
         document.setContent(request.content());
+        document.setConversationId(request.conversationId());
         document.setCustomerId(request.customerId());
         document.setSegmentId(request.segmentId());
         document.setGroupName(request.groupName());
