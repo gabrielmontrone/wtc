@@ -24,5 +24,10 @@ public record SendMessageRequest(
         String segmentId,
         String groupName,
 
-        List<String> customerIds
+        List<String> customerIds,
+
+        @NotBlank // Toda mensagem precisa de uma conversa
+        String conversationId
+
+
 ) {}

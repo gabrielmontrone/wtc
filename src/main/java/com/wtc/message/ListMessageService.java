@@ -1,7 +1,6 @@
 package com.wtc.message;
 
 import com.wtc.message.dto.MessageResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -9,11 +8,16 @@ import java.util.stream.Collectors;
 @Service
 public class ListMessageService {
 
-    @Autowired
-    private MessageRepository repository;
+    // O 'final' garante que o repositório não mude depois de criado
+    private final MessageRepository repository;
+
+    // Este é o construtor que o Spring usa para injetar o banco de dados
+    public ListMessageService(MessageRepository repository) {
+        this.repository = repository;
+    }
 
     public List<MessageResponse> execute(String conversationId) {
-        // Busca as mensagens no banco e transforma em DTO para o frontend
+        // Agora o 'repository' não será mais NULL
         return repository.findByConversationIdOrderByCreatedAtAsc(conversationId)
                 .stream()
                 .map(msg -> new MessageResponse(
