@@ -5,11 +5,13 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Collections;
 
 @Component
 public class SecurityFilter extends OncePerRequestFilter {
@@ -31,7 +33,13 @@ public class SecurityFilter extends OncePerRequestFilter {
                 var user = userRepository.findByEmail(login)
                         .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
-                var authentication = new UsernamePasswordAuthenticationToken(user, null, null);
+                // --- MUDANÇA AQUI: Criamos a permissão com o prefixo ROLE_ ---
+                var authority = new SimpleGrantedAuthority("ROLE_" + user.getRole());
+
+                // Agora passamos a autoridade como o terceiro parâmetro
+                var authentication = new UsernamePasswordAuthenticationToken(user, null, Collections.singletonList(authority));
+                // ------------------------------------------------------------
+
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         }
