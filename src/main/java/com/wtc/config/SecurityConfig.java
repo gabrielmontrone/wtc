@@ -34,6 +34,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/messages/**").authenticated()
                         .requestMatchers("/api/v1/attachments/**").authenticated()
                         .requestMatchers("/api/v1/campaigns/**").hasRole("OPERADOR")
+                        .requestMatchers("/api/v1/customers/*/observations").hasRole("OPERADOR")
                         .requestMatchers(
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",
