@@ -91,6 +91,14 @@
 			<scope>runtime</scope>
 			<optional>true</optional>
 		</dependency>
+
+        <!-- Amazon s3 -->
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>s3</artifactId>
+            <version>2.20.0</version>
+        </dependency>
+
 	</dependencies>
 
 	<build>
