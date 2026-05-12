@@ -15,6 +15,9 @@ public class MessageDocument {
     private String subject;
     private String content;
 
+
+    private String senderId;
+    private String senderRole;
     private String customerId;
     private String segmentId;
     private String groupName;
@@ -55,6 +58,22 @@ public class MessageDocument {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getSenderId() {
+        return senderId;
+    }
+
+    public void setSenderId(String senderID) {
+        this.senderId = senderID;
+    }
+
+    public String getSenderRole() {
+        return senderRole;
+    }
+
+    public void setSenderRole(String senderRole) {
+        this.senderRole = senderRole;
     }
 
     public String getCustomerId() {

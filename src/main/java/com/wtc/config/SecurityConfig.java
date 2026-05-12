@@ -32,6 +32,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/v1/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/auth/register").permitAll()
                         .requestMatchers("/api/v1/messages/**").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/conversations/*/messages").authenticated()
                         .requestMatchers("/api/v1/attachments/**").authenticated()
                         .requestMatchers("/api/v1/campaigns/**").hasRole("OPERADOR")
                         .requestMatchers("/api/v1/customers/*/observations").hasRole("OPERADOR")

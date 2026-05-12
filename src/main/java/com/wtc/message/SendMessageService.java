@@ -100,7 +100,9 @@ public class SendMessageService {
                 document.getCustomerIds(),
                 document.getStatus(),
                 document.getFailureReason(),
-                document.getCreatedAt()
+                document.getCreatedAt(),
+                document.getSenderId(),
+                document.getSenderRole()
         );
     }
 }

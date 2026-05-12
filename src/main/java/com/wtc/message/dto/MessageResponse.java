@@ -17,5 +17,7 @@ public record MessageResponse(
         List<String> customerIds,
         MessageStatus status,
         String failureReason,
-        Instant createdAt
+        Instant createdAt,
+        String senderId,
+        String senderRole
 ) {}
