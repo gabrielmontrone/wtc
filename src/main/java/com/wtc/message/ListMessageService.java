@@ -31,7 +31,9 @@ public class ListMessageService {
                         msg.getCustomerIds(),
                         msg.getStatus(),
                         msg.getFailureReason(),
-                        msg.getCreatedAt()
+                        msg.getCreatedAt(),
+                        msg.getSenderId(),
+                        msg.getSenderRole()
                 ))
                 .collect(Collectors.toList());
     }

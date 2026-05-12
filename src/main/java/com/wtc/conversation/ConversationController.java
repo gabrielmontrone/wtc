@@ -1,10 +1,14 @@
 package com.wtc.conversation;
 
 import com.wtc.conversation.dto.ConversationResponse;
+import com.wtc.message.ChatMessageService;
+import com.wtc.message.dto.ChatMessageRequest;
+import com.wtc.message.dto.MessageResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,9 +21,12 @@ import java.util.List;
 public class ConversationController {
 
     private final ListConversationService listConversationService;
+    private final ChatMessageService chatMessageService;
 
-    public ConversationController(ListConversationService listConversationService) {
+    // Construtor atualizado injetando os dois serviços necessários
+    public ConversationController(ListConversationService listConversationService, ChatMessageService chatMessageService) {
         this.listConversationService = listConversationService;
+        this.chatMessageService = chatMessageService;
     }
 
     @GetMapping("/customer/{customerId}")
@@ -27,5 +34,13 @@ public class ConversationController {
     public ResponseEntity<List<ConversationResponse>> getList(@Parameter(description = "Customer ID") @PathVariable String customerId) {
         List<ConversationResponse> conversations = listConversationService.execute(customerId);
         return ResponseEntity.ok(conversations);
+    }
+
+    @PostMapping("/{conversationId}/messages")
+    @Operation(summary = "Send a message/reply", description = "Sends a new message into an existing conversation (Bidirectional Chat).")
+    public ResponseEntity<MessageResponse> sendReply(
+            @Parameter(description = "Conversation ID") @PathVariable String conversationId,
+            @RequestBody @Valid ChatMessageRequest request) {
+        return ResponseEntity.ok(chatMessageService.sendReply(conversationId, request));
     }
 }
