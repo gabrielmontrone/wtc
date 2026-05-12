@@ -99,6 +99,13 @@
             <version>2.20.0</version>
         </dependency>
 
+        <!-- Google Firebase, notificações-->
+        <dependency>
+            <groupId>com.google.firebase</groupId>
+            <artifactId>firebase-admin</artifactId>
+            <version>9.2.0</version>
+        </dependency>
+
 	</dependencies>
 
 	<build>

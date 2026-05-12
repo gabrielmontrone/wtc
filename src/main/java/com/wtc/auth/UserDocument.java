@@ -11,6 +11,7 @@ public class UserDocument {
     private String email;
     private String password;
     private String role;
+    private String fcmToken;
 
     public String getId() {
         return id;
@@ -42,5 +43,13 @@ public class UserDocument {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public String getFcmToken() {
+        return fcmToken;
+    }
+
+    public void setFcmToken(String fcmToken) {
+        this.fcmToken = fcmToken;
     }
 }
