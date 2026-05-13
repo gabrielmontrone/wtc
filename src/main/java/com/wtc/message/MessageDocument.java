@@ -29,6 +29,8 @@ public class MessageDocument {
 
     private String conversationId;
 
+    private String originCampaignId; // ID da campanha que gerou esta mensagem
+
     public MessageDocument() {
     }
 
@@ -138,5 +140,13 @@ public class MessageDocument {
 
     public void setConversationId(String conversationId) {
         this.conversationId = conversationId;
+    }
+
+    public String getOriginCampaignId() {
+        return originCampaignId;
+    }
+
+    public void setOriginCampaignId(String originCampaignId) {
+        this.originCampaignId = originCampaignId;
     }
 }

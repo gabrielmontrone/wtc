@@ -16,6 +16,10 @@ public class CampaignDocument {
     private String callCode;      // Ex: "blackfriday", "promovip"
     private String status;        // DRAFT, ACTIVE, FINISHED
     private Instant createdAt;
+    private Long totalSends = 0L;
+    private Long successSends = 0L;
+    private Long failureSends = 0L;
+    private Long responseCount = 0L;
 
     public String getId() {
         return id;
@@ -87,5 +91,37 @@ public class CampaignDocument {
 
     public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public Long getTotalSends() {
+        return totalSends;
+    }
+
+    public void setTotalSends(Long totalSends) {
+        this.totalSends = totalSends;
+    }
+
+    public Long getSuccessSends() {
+        return successSends;
+    }
+
+    public void setSuccessSends(Long successSends) {
+        this.successSends = successSends;
+    }
+
+    public Long getFailureSends() {
+        return failureSends;
+    }
+
+    public void setFailureSends(Long failureSends) {
+        this.failureSends = failureSends;
+    }
+
+    public Long getResponseCount() {
+        return responseCount;
+    }
+
+    public void setResponseCount(Long responseCount) {
+        this.responseCount = responseCount;
     }
 }
