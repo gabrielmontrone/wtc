@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/auth")
-@Tag(name = "Authentication", description = "Login and user registration")
+@Tag(name = "Authentication", description = "Endpoints para login e registro de novos usuários")
 public class AuthController {
 
     private final AuthService authService;
@@ -26,11 +26,10 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    @Operation(summary = "Authenticate user", description = "Validates user credentials and returns a JWT access token.")
+    @Operation(summary = "Realizar Login", description = "Valida as credenciais e devolve um Token JWT válido.")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Authenticated successfully"),
-            @ApiResponse(responseCode = "400", description = "Invalid request data"),
-            @ApiResponse(responseCode = "401", description = "Invalid credentials")
+            @ApiResponse(responseCode = "200", description = "Login realizado com sucesso"),
+            @ApiResponse(responseCode = "401", description = "E-mail ou senha inválidos")
     })
     public ResponseEntity<LoginResponse> login(@RequestBody @Valid LoginRequest data) {
         var response = authService.login(data);
@@ -38,14 +37,13 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    @Operation(summary = "Register user", description = "Creates a new user account with CLIENTE or OPERADOR role.")
+    @Operation(summary = "Criar nova conta", description = "Cadastra um CLIENTE ou OPERADOR com senha criptografada.")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "User registered successfully"),
-            @ApiResponse(responseCode = "400", description = "Invalid request data")
+            @ApiResponse(responseCode = "200", description = "Usuário cadastrado com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos ou e-mail já em uso")
     })
     public ResponseEntity<String> register(@RequestBody @Valid RegisterRequest data) {
         this.authService.register(data);
         return ResponseEntity.ok("Usuário cadastrado com sucesso!");
     }
-
 }

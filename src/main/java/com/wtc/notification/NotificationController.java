@@ -2,10 +2,12 @@ package com.wtc.notification;
 
 import com.wtc.auth.UserRepository;
 import com.wtc.auth.UserDocument;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@Tag(name = "Notificações", description = "Gerenciamento de tokens push (FCM)")
 @RestController
 @RequestMapping("/api/v1/notifications")
 public class NotificationController {

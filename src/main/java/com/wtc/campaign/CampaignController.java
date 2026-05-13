@@ -3,12 +3,14 @@ package com.wtc.campaign;
 import com.wtc.campaign.dto.CampaignRequest;
 import com.wtc.campaign.dto.CampaignResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Tag(name = "Campanhas", description = "Gestão de campanhas e métricas operacionais")
 @RestController
 @RequestMapping("/api/v1/campaigns")
 public class CampaignController {
