@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
 
+@Tag(name = "Observações", description = "Notas internas sobre clientes para uso comercial")
 @RestController
 @RequestMapping("/customers")
-@Tag(name = "Customers", description = "Customer registration and queries")
 @SecurityRequirement(name = "bearerAuth")
 public class CustomerController {
 
