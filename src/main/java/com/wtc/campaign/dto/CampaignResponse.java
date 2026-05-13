@@ -11,5 +11,9 @@ public record CampaignResponse(
         String segmentTargetId,
         String callCode,
         String status,
-        Instant createdAt
+        Instant createdAt,
+        Long totalSends,
+        Long successSends,
+        Long failureSends,
+        Long responseCount
 ) {}

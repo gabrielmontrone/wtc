@@ -40,11 +40,32 @@ public class CampaignService {
                 .orElseThrow(() -> new RuntimeException("Campanha não encontrada"));
     }
 
+    // Metodo para atualizar métricas de envio (Sucesso ou Falha)
+    public void updateSendMetrics(String campaignId, boolean isSuccess) {
+        repository.findById(campaignId).ifPresent(doc -> {
+            doc.setTotalSends(doc.getTotalSends() + 1);
+            if (isSuccess) {
+                doc.setSuccessSends(doc.getSuccessSends() + 1);
+            } else {
+                doc.setFailureSends(doc.getFailureSends() + 1);
+            }
+            repository.save(doc);
+        });
+    }
+
+    // Metodo para incrementar quando o cliente responde
+    public void incrementResponseCount(String campaignId) {
+        repository.findById(campaignId).ifPresent(doc -> {
+            doc.setResponseCount(doc.getResponseCount() + 1);
+            repository.save(doc);
+        });
+    }
+
     private CampaignResponse toResponse(CampaignDocument doc) {
         return new CampaignResponse(
                 doc.getId(), doc.getName(), doc.getDescription(), doc.getType(),
                 doc.getContent(), doc.getSegmentTargetId(), doc.getCallCode(),
-                doc.getStatus(), doc.getCreatedAt()
+                doc.getStatus(), doc.getCreatedAt(), doc.getTotalSends(), doc.getSuccessSends(), doc.getFailureSends(), doc.getResponseCount()
         );
     }
 }

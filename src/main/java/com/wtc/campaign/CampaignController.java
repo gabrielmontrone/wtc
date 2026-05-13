@@ -2,6 +2,7 @@ package com.wtc.campaign;
 
 import com.wtc.campaign.dto.CampaignRequest;
 import com.wtc.campaign.dto.CampaignResponse;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,5 +32,12 @@ public class CampaignController {
     @GetMapping("/{id}")
     public ResponseEntity<CampaignResponse> getById(@PathVariable String id) {
         return ResponseEntity.ok(service.getById(id));
+    }
+
+    @PatchMapping("/{id}/simulate-send")
+    @Operation(summary = "Simulate campaign sending", description = "Updates metrics for testing purposes.")
+    public ResponseEntity<Void> simulateSend(@PathVariable String id, @RequestParam boolean success) {
+        service.updateSendMetrics(id, success);
+        return ResponseEntity.ok().build();
     }
 }
