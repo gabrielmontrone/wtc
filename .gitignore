@@ -31,3 +31,10 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Secrets / local env ###
+.env
+*.env
+!.env.example
+application-local.properties
+src/main/resources/firebase-service-account.json
