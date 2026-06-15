@@ -3,11 +3,13 @@ package com.wtc.auth;
 import com.wtc.auth.dto.LoginRequest;
 import com.wtc.auth.dto.LoginResponse;
 import com.wtc.auth.dto.RegisterRequest;
+import com.wtc.auth.dto.RegisterResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -39,11 +41,14 @@ public class AuthController {
     @PostMapping("/register")
     @Operation(summary = "Criar nova conta", description = "Cadastra um CLIENTE ou OPERADOR com senha criptografada.")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Usuário cadastrado com sucesso"),
-            @ApiResponse(responseCode = "400", description = "Dados inválidos ou e-mail já em uso")
+            @ApiResponse(responseCode = "201", description = "Usuário cadastrado com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos"),
+            @ApiResponse(responseCode = "409", description = "E-mail já cadastrado")
     })
-    public ResponseEntity<String> register(@RequestBody @Valid RegisterRequest data) {
+    public ResponseEntity<RegisterResponse> register(@RequestBody @Valid RegisterRequest data) {
         this.authService.register(data);
-        return ResponseEntity.ok("Usuário cadastrado com sucesso!");
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(new RegisterResponse("Usuário cadastrado com sucesso!", data.role().toUpperCase()));
     }
 }

@@ -1,5 +1,6 @@
 package com.wtc.message;
 
+import com.wtc.auth.EmailAlreadyExistsException;
 import com.wtc.message.dto.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,18 @@ public class GlobalExceptionHandler {
                         Instant.now(),
                         HttpStatus.BAD_REQUEST.value(),
                         "Business rule error",
+                        List.of(ex.getMessage())
+                )
+        );
+    }
+
+    @org.springframework.web.bind.annotation.ExceptionHandler(EmailAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> handleEmailExists(EmailAlreadyExistsException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(
+                new ErrorResponse(
+                        Instant.now(),
+                        HttpStatus.CONFLICT.value(),
+                        "Conflict",
                         List.of(ex.getMessage())
                 )
         );

@@ -40,7 +40,7 @@ public class AuthService {
 
     public void register(RegisterRequest data) {
         if (repository.findByEmail(data.email()).isPresent()) {
-            throw new RuntimeException("E-mail já cadastrado");
+            throw new EmailAlreadyExistsException("E-mail já cadastrado");
         }
 
         // 1. Criar e salvar o usuário (Acesso ao Sistema)
