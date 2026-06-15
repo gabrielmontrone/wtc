@@ -1,0 +1,24 @@
+# Render deployment blueprint for the WTC API.
+# Docs: https://render.com/docs/blueprint-spec
+#
+# To deploy: push this repo to GitHub, then on Render click
+# "New +" -> "Blueprint" and point it at this repository.
+# Render reads this file and provisions the service below.
+services:
+  - type: web
+    name: wtc-api
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: free                 # free tier sleeps after ~15 min idle (cold start ~30s)
+    region: oregon
+    healthCheckPath: /health
+    envVars:
+      # Paste your (rotated!) Atlas connection string in the Render dashboard.
+      # sync: false => Render prompts for the value and keeps it secret.
+      - key: MONGODB_URI
+        sync: false
+      - key: MONGODB_DATABASE
+        value: wtc_db
+      # Render generates a strong random JWT secret for you.
+      - key: JWT_SECRET
+        generateValue: true

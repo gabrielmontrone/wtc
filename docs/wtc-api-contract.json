@@ -1,0 +1,264 @@
+{
+  "name": "WTC API",
+  "version": "v1",
+  "baseUrl": "http://localhost:8080",
+  "swagger": {
+    "ui": "http://localhost:8080/swagger-ui.html",
+    "openApiJson": "http://localhost:8080/v3/api-docs"
+  },
+  "authentication": {
+    "type": "bearer",
+    "scheme": "JWT",
+    "header": "Authorization",
+    "format": "Bearer <token>",
+    "publicEndpoints": [
+      "POST /api/v1/auth/login",
+      "POST /api/v1/auth/register",
+      "GET /swagger-ui.html",
+      "GET /swagger-ui/**",
+      "GET /v3/api-docs/**"
+    ]
+  },
+  "enums": {
+    "UserRole": [
+      "CLIENTE",
+      "OPERADOR"
+    ],
+    "MessageTargetType": [
+      "CUSTOMER",
+      "SEGMENT",
+      "GROUP"
+    ],
+    "MessageStatus": [
+      "PENDING",
+      "FAILED"
+    ]
+  },
+  "endpoints": [
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/login",
+      "tag": "Authentication",
+      "authRequired": false,
+      "summary": "Authenticate user",
+      "requestBody": {
+        "email": "string, required",
+        "password": "string, required"
+      },
+      "successResponse": {
+        "status": 200,
+        "body": {
+          "token": "string",
+          "role": "string"
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/register",
+      "tag": "Authentication",
+      "authRequired": false,
+      "summary": "Register user",
+      "requestBody": {
+        "email": "string, required, valid email",
+        "password": "string, required",
+        "role": "string, required, one of CLIENTE or OPERADOR"
+      },
+      "successResponse": {
+        "status": 200,
+        "body": "Usuario cadastrado com sucesso!"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/customers",
+      "tag": "Customers",
+      "authRequired": true,
+      "summary": "Create customer",
+      "requestBody": {
+        "name": "string, required, 3 to 100 characters",
+        "document": "string, required, 11 to 14 numeric characters",
+        "vip": "boolean, optional",
+        "fidelidade": "boolean, optional",
+        "ativo": "boolean, optional"
+      },
+      "successResponse": {
+        "status": 200,
+        "body": "CustomerResponse"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/customers/{id}",
+      "tag": "Customers",
+      "authRequired": true,
+      "summary": "Find customer by ID",
+      "pathParameters": {
+        "id": "string, required"
+      },
+      "successResponse": {
+        "status": 200,
+        "body": "CustomerResponse"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/customers",
+      "tag": "Customers",
+      "authRequired": true,
+      "summary": "List customers",
+      "queryParameters": {
+        "vip": "boolean, optional",
+        "fidelidade": "boolean, optional",
+        "ativo": "boolean, optional",
+        "page": "integer, optional, default 0",
+        "size": "integer, optional, default 10"
+      },
+      "successResponse": {
+        "status": 200,
+        "body": "Page<CustomerResponse>"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/segments",
+      "tag": "Segments",
+      "authRequired": true,
+      "summary": "Create segment",
+      "requestBody": {
+        "name": "string, required",
+        "vip": "boolean, optional",
+        "active": "boolean, optional",
+        "minScore": "integer, optional",
+        "minLoyalty": "integer, optional"
+      },
+      "successResponse": {
+        "status": 201,
+        "body": "SegmentResponse"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/segments",
+      "tag": "Segments",
+      "authRequired": true,
+      "summary": "List segments",
+      "successResponse": {
+        "status": 200,
+        "body": "SegmentResponse[]"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/segments/{id}/customers",
+      "tag": "Segments",
+      "authRequired": true,
+      "summary": "List segment customers",
+      "pathParameters": {
+        "id": "string, required"
+      },
+      "successResponse": {
+        "status": 200,
+        "body": "SegmentCustomersResponse"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/messages",
+      "tag": "Messages",
+      "authRequired": true,
+      "summary": "Send message",
+      "requestBody": {
+        "targetType": "string, required, one of CUSTOMER, SEGMENT or GROUP",
+        "subject": "string, required, 2 to 120 characters",
+        "content": "string, required, 1 to 2000 characters",
+        "customerId": "string, optional",
+        "segmentId": "string, optional",
+        "groupName": "string, optional",
+        "customerIds": "string[], optional"
+      },
+      "successResponse": {
+        "status": 201,
+        "body": "MessageResponse"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/messages/conversation/{conversationId}",
+      "tag": "Messages",
+      "authRequired": true,
+      "summary": "Get conversation message history",
+      "pathParameters": {
+        "conversationId": "string, required"
+      },
+      "successResponse": {
+        "status": 200,
+        "body": "MessageResponse[]"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/conversations/customer/{customerId}",
+      "tag": "Conversations",
+      "authRequired": true,
+      "summary": "List customer conversations",
+      "pathParameters": {
+        "customerId": "string, required"
+      },
+      "successResponse": {
+        "status": 200,
+        "body": "ConversationResponse[]"
+      }
+    }
+  ],
+  "schemas": {
+    "CustomerResponse": {
+      "id": "string",
+      "name": "string",
+      "document": "string",
+      "vip": "boolean",
+      "fidelidade": "boolean",
+      "ativo": "boolean",
+      "createdAt": "string, date-time"
+    },
+    "SegmentResponse": {
+      "id": "string",
+      "name": "string",
+      "vip": "boolean",
+      "active": "boolean",
+      "minScore": "integer",
+      "minLoyalty": "integer"
+    },
+    "SegmentCustomersResponse": {
+      "segmentId": "string",
+      "totalCustomers": "integer",
+      "customerIds": "string[]"
+    },
+    "MessageResponse": {
+      "id": "string",
+      "targetType": "MessageTargetType",
+      "subject": "string",
+      "content": "string",
+      "customerId": "string",
+      "segmentId": "string",
+      "groupName": "string",
+      "customerIds": "string[]",
+      "status": "MessageStatus",
+      "failureReason": "string",
+      "createdAt": "string, date-time"
+    },
+    "ConversationResponse": {
+      "id": "string",
+      "customerId": "string",
+      "operatorId": "string",
+      "status": "string",
+      "updatedAt": "string, date-time"
+    },
+    "ErrorResponse": {
+      "timestamp": "string, date-time",
+      "status": "integer",
+      "error": "string",
+      "details": "string[]"
+    }
+  }
+}
