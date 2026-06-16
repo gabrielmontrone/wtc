@@ -1,5 +1,6 @@
 package com.wtc.auth;
 
+import com.wtc.auth.dto.GoogleLoginRequest;
 import com.wtc.auth.dto.LoginRequest;
 import com.wtc.auth.dto.LoginResponse;
 import com.wtc.auth.dto.RegisterRequest;
@@ -36,6 +37,16 @@ public class AuthController {
     public ResponseEntity<LoginResponse> login(@RequestBody @Valid LoginRequest data) {
         var response = authService.login(data);
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/google")
+    @Operation(summary = "Entrar com Google", description = "Valida o ID token do Google Sign-In e devolve um JWT; cria um CLIENTE no primeiro acesso.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Autenticado com sucesso via Google"),
+            @ApiResponse(responseCode = "401", description = "Token do Google inválido")
+    })
+    public ResponseEntity<LoginResponse> loginWithGoogle(@RequestBody @Valid GoogleLoginRequest data) {
+        return ResponseEntity.ok(authService.loginWithGoogle(data.idToken()));
     }
 
     @PostMapping("/register")
