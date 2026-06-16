@@ -33,7 +33,8 @@ public class ListMessageService {
                         msg.getFailureReason(),
                         msg.getCreatedAt(),
                         msg.getSenderId(),
-                        msg.getSenderRole()
+                        msg.getSenderRole(),
+                        msg.getImageUrl()
                 ))
                 .collect(Collectors.toList());
     }

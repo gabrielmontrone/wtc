@@ -33,11 +33,18 @@ public class ChatMessageService {
     }
 
     public MessageResponse sendReply(String conversationId, ChatMessageRequest request) {
+        boolean hasContent = request.content() != null && !request.content().isBlank();
+        boolean hasImage = request.imageUrl() != null && !request.imageUrl().isBlank();
+        if (!hasContent && !hasImage) {
+            throw new IllegalArgumentException("A mensagem precisa de um texto ou de uma imagem.");
+        }
+
         UserDocument currentUser = (UserDocument) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         MessageDocument message = new MessageDocument();
         message.setConversationId(conversationId);
         message.setContent(request.content());
+        message.setImageUrl(request.imageUrl());
         message.setSenderId(currentUser.getId());
         message.setSenderRole(currentUser.getRole());
         message.setCreatedAt(Instant.now());
@@ -54,7 +61,10 @@ public class ChatMessageService {
             if (targetUserId != null) {
                 userRepository.findById(targetUserId).ifPresent(targetUser -> {
                     String title = "Nova mensagem de " + currentUser.getRole();
-                    fcmService.sendPush(targetUser.getFcmToken(), title, request.content());
+                    String body = (request.content() != null && !request.content().isBlank())
+                            ? request.content()
+                            : "📷 Foto";
+                    fcmService.sendPush(targetUser.getFcmToken(), title, body);
                 });
             }
         });
@@ -70,7 +80,7 @@ public class ChatMessageService {
                 doc.getId(), null, null, doc.getContent(),
                 doc.getSenderId(), null, null, null,
                 doc.getStatus(), null, doc.getCreatedAt(), doc.getSenderId(),
-                doc.getSenderRole()
+                doc.getSenderRole(), doc.getImageUrl()
         );
     }
 }

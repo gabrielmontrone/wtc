@@ -111,7 +111,8 @@ public class SendMessageService {
                 document.getFailureReason(),
                 document.getCreatedAt(),
                 document.getSenderId(),
-                document.getSenderRole()
+                document.getSenderRole(),
+                document.getImageUrl()
         );
     }
 }

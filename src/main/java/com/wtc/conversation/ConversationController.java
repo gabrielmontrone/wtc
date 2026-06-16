@@ -18,7 +18,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/conversations")
-@Tag(name = "Conversations", description = "Customer conversations")
+@Tag(name = "Conversas", description = "Conversas com clientes")
 @SecurityRequirement(name = "bearerAuth")
 public class ConversationController {
 
@@ -36,23 +36,23 @@ public class ConversationController {
     }
 
     @GetMapping("/customer/{customerId}")
-    @Operation(summary = "List customer conversations", description = "Returns all conversations for a customer.")
-    public ResponseEntity<List<ConversationResponse>> getList(@Parameter(description = "Customer ID") @PathVariable String customerId) {
+    @Operation(summary = "Listar conversas do cliente", description = "Retorna todas as conversas de um cliente.")
+    public ResponseEntity<List<ConversationResponse>> getList(@Parameter(description = "ID do cliente") @PathVariable String customerId) {
         List<ConversationResponse> conversations = listConversationService.execute(customerId);
         return ResponseEntity.ok(conversations);
     }
 
     @PostMapping
-    @Operation(summary = "Start a conversation", description = "Creates a new OPEN conversation for an existing customer.")
+    @Operation(summary = "Iniciar conversa", description = "Cria uma nova conversa ABERTA para um cliente existente.")
     public ResponseEntity<ConversationResponse> create(@RequestBody @Valid CreateConversationRequest request) {
         ConversationResponse created = createConversationService.execute(request.customerId());
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
     @PostMapping("/{conversationId}/messages")
-    @Operation(summary = "Send a message/reply", description = "Sends a new message into an existing conversation (Bidirectional Chat).")
+    @Operation(summary = "Enviar mensagem/resposta", description = "Envia uma nova mensagem em uma conversa existente (chat bidirecional).")
     public ResponseEntity<MessageResponse> sendReply(
-            @Parameter(description = "Conversation ID") @PathVariable String conversationId,
+            @Parameter(description = "ID da conversa") @PathVariable String conversationId,
             @RequestBody @Valid ChatMessageRequest request) {
         return ResponseEntity.ok(chatMessageService.sendReply(conversationId, request));
     }

@@ -29,6 +29,8 @@ public class MessageDocument {
 
     private String conversationId;
 
+    private String imageUrl; // URL pública de uma imagem anexada a esta mensagem (opcional)
+
     private String originCampaignId; // ID da campanha que gerou esta mensagem
 
     public MessageDocument() {
@@ -140,6 +142,14 @@ public class MessageDocument {
 
     public void setConversationId(String conversationId) {
         this.conversationId = conversationId;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public String getOriginCampaignId() {

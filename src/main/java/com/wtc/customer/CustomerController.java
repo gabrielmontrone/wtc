@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
 
-@Tag(name = "Observações", description = "Notas internas sobre clientes para uso comercial")
+@Tag(name = "Clientes", description = "Cadastro e consulta de clientes")
 @RestController
 @RequestMapping("/customers")
 @SecurityRequirement(name = "bearerAuth")
@@ -24,7 +24,7 @@ public class CustomerController {
 
     // CREATE
     @PostMapping
-    @Operation(summary = "Create customer", description = "Registers a customer with document and classification flags.")
+    @Operation(summary = "Criar cliente", description = "Cadastra um cliente com documento e flags de classificação.")
     public ResponseEntity<CustomerResponse> create(
             @Valid @RequestBody CreateCustomerRequest request) {
 
@@ -33,21 +33,21 @@ public class CustomerController {
 
     // GET BY ID
     @GetMapping("/{id}")
-    @Operation(summary = "Find customer by ID", description = "Returns a single customer by its identifier.")
-    public ResponseEntity<CustomerResponse> findById(@Parameter(description = "Customer ID") @PathVariable String id) {
+    @Operation(summary = "Buscar cliente por ID", description = "Retorna um único cliente pelo seu identificador.")
+    public ResponseEntity<CustomerResponse> findById(@Parameter(description = "ID do cliente") @PathVariable String id) {
 
         return ResponseEntity.ok(service.findById(id));
     }
 
     // LIST COM FILTROS
     @GetMapping
-    @Operation(summary = "List customers", description = "Returns paginated customers, optionally filtered by status flags.")
+    @Operation(summary = "Listar clientes", description = "Retorna clientes paginados, opcionalmente filtrados por flags de status.")
     public ResponseEntity<Page<CustomerResponse>> list(
-            @Parameter(description = "Filter VIP customers") @RequestParam(required = false) Boolean vip,
-            @Parameter(description = "Filter loyalty program customers") @RequestParam(required = false) Boolean fidelidade,
-            @Parameter(description = "Filter active customers") @RequestParam(required = false) Boolean ativo,
-            @Parameter(description = "Page number, starting at 0") @RequestParam(defaultValue = "0") int page,
-            @Parameter(description = "Page size") @RequestParam(defaultValue = "10") int size
+            @Parameter(description = "Filtrar clientes VIP") @RequestParam(required = false) Boolean vip,
+            @Parameter(description = "Filtrar clientes do programa de fidelidade") @RequestParam(required = false) Boolean fidelidade,
+            @Parameter(description = "Filtrar clientes ativos") @RequestParam(required = false) Boolean ativo,
+            @Parameter(description = "Número da página, começando em 0") @RequestParam(defaultValue = "0") int page,
+            @Parameter(description = "Tamanho da página") @RequestParam(defaultValue = "10") int size
     ) {
 
         Pageable pageable = PageRequest.of(page, size);

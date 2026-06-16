@@ -1,7 +1,10 @@
 package com.wtc.message.dto;
 
-import jakarta.validation.constraints.NotBlank;
-
+/**
+ * Mensagem enviada dentro de uma conversa. Aceita texto, uma imagem (via {@code imageUrl})
+ * ou ambos. A obrigatoriedade de ao menos um dos campos é validada no serviço.
+ */
 public record ChatMessageRequest(
-        @NotBlank String content
+        String content,
+        String imageUrl
 ) {}

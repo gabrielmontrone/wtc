@@ -15,7 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/messages")
-@Tag(name = "Messages", description = "Message dispatch and history")
+@Tag(name = "Mensagens", description = "Disparo e histórico de mensagens")
 @SecurityRequirement(name = "bearerAuth")
 public class MessageController {
 
@@ -30,7 +30,7 @@ public class MessageController {
     }
 
     @PostMapping
-    @Operation(summary = "Send message", description = "Dispatches a message to customers, a segment, or a group.")
+    @Operation(summary = "Enviar mensagem", description = "Dispara uma mensagem para clientes, um segmento ou um grupo.")
     public ResponseEntity<MessageResponse> send(@Valid @RequestBody SendMessageRequest request) {
         MessageResponse response = sendMessageService.execute(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -38,8 +38,8 @@ public class MessageController {
 
     // --- MTD Historico de conversas ---
     @GetMapping("/conversation/{conversationId}")
-    @Operation(summary = "Get conversation message history", description = "Returns the messages for a conversation.")
-    public ResponseEntity<List<MessageResponse>> getHistory(@Parameter(description = "Conversation ID") @PathVariable String conversationId) {
+    @Operation(summary = "Obter histórico de mensagens da conversa", description = "Retorna as mensagens de uma conversa.")
+    public ResponseEntity<List<MessageResponse>> getHistory(@Parameter(description = "ID da conversa") @PathVariable String conversationId) {
         var history = listMessageService.execute(conversationId);
         return ResponseEntity.ok(history);
     }

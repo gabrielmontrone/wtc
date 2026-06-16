@@ -9,6 +9,8 @@ import java.util.UUID;
 @Service
 public class AttachmentService {
 
+    private static final long MAX_FILE_SIZE_BYTES = 10L * 1024 * 1024; // 10MB
+
     private final AttachmentRepository repository;
     private final S3Service s3Service;
 
@@ -18,8 +20,8 @@ public class AttachmentService {
     }
 
     public UploadResponse prepareUpload(UploadRequest request) {
-        // 1. Validar tamanho (Critério de aceitação: limite de 10MB por ex)
-        if (request.fileSize() > 10 * 1024 * 1024) {
+        // 1. Validar tamanho (Critério de aceitação: limite de 10MB)
+        if (request.fileSize() > MAX_FILE_SIZE_BYTES) {
             throw new RuntimeException("Arquivo muito grande! Limite de 10MB.");
         }
 
@@ -29,17 +31,22 @@ public class AttachmentService {
         // 3. Gerar a URL pré-assinada (Onde o usuário vai fazer o upload)
         String uploadUrl = s3Service.generatePresignedUrl(s3Key, request.contentType());
 
-        // 4. Salvar metadados no MongoDB (Critério: persistir metadados)
+        // 4. URL pública que será usada para exibir o arquivo após o upload
+        String fileUrl = s3Service.getPublicUrl(s3Key);
+
+        // 5. Salvar metadados no MongoDB (Critério: persistir metadados)
         AttachmentDocument doc = new AttachmentDocument();
         doc.setFileName(request.fileName());
         doc.setContentType(request.contentType());
         doc.setFileSize(request.fileSize());
         doc.setS3Key(s3Key);
+        doc.setUrl(fileUrl);
+        doc.setStatus("PENDING");
         doc.setCreatedAt(Instant.now());
 
         AttachmentDocument saved = repository.save(doc);
 
-        return new UploadResponse(saved.getId(), uploadUrl);
+        return new UploadResponse(saved.getId(), uploadUrl, fileUrl);
     }
 
     public void confirmUpload(String attachmentId, String messageId) {

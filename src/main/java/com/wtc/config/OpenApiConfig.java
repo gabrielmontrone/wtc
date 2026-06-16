@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
         info = @Info(
                 title = "WTC API",
                 version = "v1",
-                description = "API documentation for the WTC backend.",
+                description = "Documentação da API do backend WTC.",
                 contact = @Contact(name = "WTC Team"),
                 license = @License(name = "MIT")
         )

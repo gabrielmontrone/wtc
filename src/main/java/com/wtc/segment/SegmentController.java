@@ -16,7 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/segments")
-@Tag(name = "Segments", description = "Customer segmentation rules")
+@Tag(name = "Segmentos", description = "Regras de segmentação de clientes")
 @SecurityRequirement(name = "bearerAuth")
 public class SegmentController {
 
@@ -33,21 +33,21 @@ public class SegmentController {
     }
 
     @PostMapping
-    @Operation(summary = "Create segment", description = "Creates a segment from customer classification criteria.")
+    @Operation(summary = "Criar segmento", description = "Cria um segmento a partir de critérios de classificação de clientes.")
     public ResponseEntity<SegmentResponse> create(@Valid @RequestBody CreateSegmentRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(createService.execute(request));
     }
 
     @GetMapping
-    @Operation(summary = "List segments", description = "Returns all configured segments.")
+    @Operation(summary = "Listar segmentos", description = "Retorna todos os segmentos configurados.")
     public ResponseEntity<List<SegmentResponse>> list() {
         return ResponseEntity.ok(listService.execute());
     }
 
     @GetMapping("/{id}/customers")
-    @Operation(summary = "List segment customers", description = "Returns the customer IDs that match a segment.")
-    public ResponseEntity<SegmentCustomersResponse> customers(@Parameter(description = "Segment ID") @PathVariable String id) {
+    @Operation(summary = "Listar clientes do segmento", description = "Retorna os IDs dos clientes que correspondem a um segmento.")
+    public ResponseEntity<SegmentCustomersResponse> customers(@Parameter(description = "ID do segmento") @PathVariable String id) {
         return ResponseEntity.ok(customersService.execute(id));
     }
 }

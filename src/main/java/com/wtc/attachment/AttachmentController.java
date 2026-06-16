@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/attachments")
-@Tag(name = "Attachments", description = "Gerenciamento de mídias e uploads via S3/MinIO")
+@Tag(name = "Anexos", description = "Gerenciamento de mídias e uploads via S3/MinIO")
 public class AttachmentController {
 
     private final AttachmentService attachmentService;

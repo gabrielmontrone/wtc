@@ -19,5 +19,6 @@ public record MessageResponse(
         String failureReason,
         Instant createdAt,
         String senderId,
-        String senderRole
+        String senderRole,
+        String imageUrl
 ) {}

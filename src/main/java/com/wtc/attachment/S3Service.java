@@ -20,12 +20,14 @@ public class S3Service {
     private String bucketName;
 
     private final S3Presigner presigner;
+    private final String endpoint;
 
     public S3Service(
             @Value("${aws.access-key}") String accessKey,
             @Value("${aws.secret-key}") String secretKey,
             @Value("${aws.s3.endpoint}") String endpoint) {
 
+        this.endpoint = endpoint;
         this.presigner = S3Presigner.builder()
                 .region(Region.US_EAST_1)
                 .endpointOverride(URI.create(endpoint))
@@ -50,5 +52,14 @@ public class S3Service {
                 .build();
 
         return presigner.presignPutObject(presignRequest).url().toString();
+    }
+
+    /**
+     * Builds the public (path-style) URL used to download/display the object once it
+     * has been uploaded. Matches the path-style access configured for the presigner.
+     */
+    public String getPublicUrl(String key) {
+        String base = endpoint.endsWith("/") ? endpoint.substring(0, endpoint.length() - 1) : endpoint;
+        return base + "/" + bucketName + "/" + key;
     }
 }

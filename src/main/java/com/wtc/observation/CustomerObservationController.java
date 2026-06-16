@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
-@Tag(name = "Observação", description = "Gerenciamento de observações internas dos clientes")
+@Tag(name = "Observações", description = "Gerenciamento de observações internas dos clientes")
 @RestController
 @RequestMapping("/api/v1/customers/{customerId}/observations")
 public class CustomerObservationController {
