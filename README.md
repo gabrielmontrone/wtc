@@ -12,13 +12,18 @@ S3-compatible file storage, and Firebase push notifications.
 
 | | |
 |---|---|
-| **API base URL** | `https://<your-service>.onrender.com` |
-| **Interactive API docs (Swagger UI)** | `https://<your-service>.onrender.com/swagger-ui.html` |
-| **Health check** | `https://<your-service>.onrender.com/health` |
+| **API base URL** | `https://wtc-ioxk.onrender.com` |
+| **Interactive API docs (Swagger UI)** | `https://wtc-ioxk.onrender.com/swagger-ui.html` |
+| **Health check** | `https://wtc-ioxk.onrender.com/health` |
 
-> Hosted on Render's free tier — the first request after idle may take ~30s to wake up.
-> Open the Swagger UI to explore and call every endpoint directly in the browser.
-> _(Replace `<your-service>` with your real Render URL after deploying — see [Deployment](#-deployment).)_
+> ⏱️ **Cold start:** the demo is hosted on Render's **free tier**, which sleeps after ~15 min
+> of inactivity. The first request after idle can take **~30–60s** to wake the instance
+> (subsequent requests are fast). If a call seems to hang, hit the health check once to warm it
+> up, then retry. **For active development we recommend [running the API locally](#-running-locally)** —
+> it is instant and works fully offline.
+
+Open the Swagger UI to explore and call every endpoint directly in the browser, or use the
+[`Using the API`](#-using-the-api) examples below.
 
 ---
 
@@ -93,6 +98,56 @@ src/main/java/com/wtc/
 
 > ⚠️ **Configuration is read entirely from environment variables** — no credentials are
 > stored in the repository. See [`.env.example`](.env.example) for every supported variable.
+
+## 📡 Using the API
+
+Every example below works against either environment — just set the base URL:
+
+```bash
+# Hosted demo (free tier; first call may cold-start ~30–60s)
+BASE_URL=https://wtc-ioxk.onrender.com
+
+# Local backend (recommended for development — instant, offline)
+BASE_URL=http://localhost:8080
+```
+
+Most endpoints require a **JWT bearer token**. The flow is: register a user → log in to get a
+token → send it as `Authorization: Bearer <token>` on subsequent requests.
+
+**1. Register** (`role` is `CLIENTE` or `OPERADOR`):
+
+```bash
+curl -X POST "$BASE_URL/api/v1/auth/register" \
+  -H "Content-Type: application/json" \
+  -d '{"email":"operador@wtc.com","password":"secret123","role":"OPERADOR"}'
+```
+
+**2. Log in** — returns `{ "token", "role", "userId" }`:
+
+```bash
+curl -X POST "$BASE_URL/api/v1/auth/login" \
+  -H "Content-Type: application/json" \
+  -d '{"email":"operador@wtc.com","password":"secret123"}'
+```
+
+**3. Call an authenticated endpoint** — pass the token from step 2:
+
+```bash
+TOKEN="<paste-the-token-here>"
+
+# List customers (paginated, with optional filters)
+curl "$BASE_URL/customers?page=0&size=10" \
+  -H "Authorization: Bearer $TOKEN"
+
+# Create a customer
+curl -X POST "$BASE_URL/customers" \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Maria Silva","document":"12345678901","vip":false,"fidelidade":false,"ativo":true}'
+```
+
+> 💡 **Prefer a UI?** Open **`$BASE_URL/swagger-ui.html`**, click **Authorize**, paste your
+> token, and every endpoint becomes callable from the browser — no curl needed.
 
 ## 🐳 Deployment
 
