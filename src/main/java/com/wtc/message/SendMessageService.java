@@ -112,7 +112,9 @@ public class SendMessageService {
                 document.getCreatedAt(),
                 document.getSenderId(),
                 document.getSenderRole(),
-                document.getImageUrl()
+                document.getImageUrl(),
+                document.getRiskLevel(),
+                document.getRiskFlags()
         );
     }
 }

@@ -34,7 +34,9 @@ public class ListMessageService {
                         msg.getCreatedAt(),
                         msg.getSenderId(),
                         msg.getSenderRole(),
-                        msg.getImageUrl()
+                        msg.getImageUrl(),
+                        msg.getRiskLevel(),
+                        msg.getRiskFlags()
                 ))
                 .collect(Collectors.toList());
     }

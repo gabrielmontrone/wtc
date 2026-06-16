@@ -31,6 +31,9 @@ public class MessageDocument {
 
     private String imageUrl; // URL pública de uma imagem anexada a esta mensagem (opcional)
 
+    private String riskLevel; // Resultado do scan DLP: NONE/LOW/MEDIUM/HIGH
+    private List<String> riskFlags; // Tipos detectados: CPF, CNPJ, CARD, SUSPICIOUS_LINK
+
     private String originCampaignId; // ID da campanha que gerou esta mensagem
 
     public MessageDocument() {
@@ -150,6 +153,22 @@ public class MessageDocument {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public String getRiskLevel() {
+        return riskLevel;
+    }
+
+    public void setRiskLevel(String riskLevel) {
+        this.riskLevel = riskLevel;
+    }
+
+    public List<String> getRiskFlags() {
+        return riskFlags;
+    }
+
+    public void setRiskFlags(List<String> riskFlags) {
+        this.riskFlags = riskFlags;
     }
 
     public String getOriginCampaignId() {

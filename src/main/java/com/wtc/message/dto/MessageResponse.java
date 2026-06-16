@@ -20,5 +20,7 @@ public record MessageResponse(
         Instant createdAt,
         String senderId,
         String senderRole,
-        String imageUrl
+        String imageUrl,
+        String riskLevel,
+        List<String> riskFlags
 ) {}
