@@ -78,23 +78,44 @@ src/main/java/com/wtc/
 
 ## 🚀 Running locally
 
-**Prerequisites:** Java 17+, a MongoDB connection string (e.g. a free [MongoDB Atlas](https://www.mongodb.com/atlas) cluster). Docker is optional (for MinIO).
+### Option A — Docker (recommended, zero setup)
+
+Spins up the API **and** a fresh MongoDB together. No Atlas account, no secrets to fill in.
+
+**Prerequisite:** Docker Desktop.
+
+```bash
+cd backend/wtc
+docker compose up --build
+```
+
+When it's ready:
+
+| | |
+|---|---|
+| **API base URL** | <http://localhost:8080> |
+| **Swagger UI** | <http://localhost:8080/swagger-ui.html> |
+| **Health check** | <http://localhost:8080/health> |
+
+Data lives in a Docker volume (`wtc-mongo-data`) and survives restarts. To start clean:
+`docker compose down -v`. The companion Android app reaches this from an emulator at
+`http://10.0.2.2:8080/` (see the [app README](../../frontend/README.md)).
+
+### Option B — Maven + your own MongoDB
+
+**Prerequisites:** Java 17+ and a MongoDB connection string (e.g. a free
+[MongoDB Atlas](https://www.mongodb.com/atlas) cluster).
 
 1. Copy the env template and fill in your values:
    ```bash
    cp .env.example .env
    # edit .env: set MONGODB_URI and JWT_SECRET
    ```
-2. Export the variables (or use your IDE's env-file support):
+2. Run (the `.env` is loaded automatically — no manual export needed):
    ```bash
-   # PowerShell
-   Get-Content .env | ForEach-Object { if ($_ -match '^\s*([^#=]+)=(.*)$') { [Environment]::SetEnvironmentVariable($matches[1].Trim(), $matches[2].Trim()) } }
+   ./mvnw spring-boot:run        # Windows: .\mvnw.cmd spring-boot:run
    ```
-3. Run:
-   ```bash
-   ./mvnw spring-boot:run
-   ```
-4. Open <http://localhost:8080/swagger-ui.html>.
+3. Open <http://localhost:8080/swagger-ui.html>.
 
 > ⚠️ **Configuration is read entirely from environment variables** — no credentials are
 > stored in the repository. See [`.env.example`](.env.example) for every supported variable.

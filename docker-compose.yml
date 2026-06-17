@@ -1,0 +1,46 @@
+# Self-contained local stack for the WTC API — no cloud account, no secrets to fill in.
+#
+#   docker compose up --build
+#
+# Brings up a fresh MongoDB and the API together. When it's ready:
+#   • API base URL      → http://localhost:8080
+#   • Swagger UI         → http://localhost:8080/swagger-ui.html
+#   • Health check       → http://localhost:8080/health
+#
+# The Android app (built with BASE_URL = http://10.0.2.2:8080/) reaches this from an emulator,
+# since 10.0.2.2 is the emulator's alias for the host machine's localhost.
+services:
+  mongo:
+    image: mongo:7
+    container_name: wtc-mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017" # optional — lets you inspect the DB from the host
+    volumes:
+      - wtc-mongo-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build: .
+    container_name: wtc-api
+    restart: unless-stopped
+    depends_on:
+      mongo:
+        condition: service_healthy
+    environment:
+      # Local containerized MongoDB — no Atlas, no credentials needed.
+      MONGODB_URI: mongodb://mongo:27017
+      MONGODB_DATABASE: wtc_db
+      # Demo-only signing secret. Fine for local evaluation; rotate for any real deployment.
+      JWT_SECRET: local-demo-secret-please-change-for-real-deployments-0123456789
+      # GOOGLE_CLIENT_ID intentionally left unset → "Continue with Google" is disabled,
+      # but email/password registration and login work fully.
+    ports:
+      - "8080:10000" # host 8080 → container 10000 (matches the app's BASE_URL)
+
+volumes:
+  wtc-mongo-data:
