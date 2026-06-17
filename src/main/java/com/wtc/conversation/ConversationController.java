@@ -3,7 +3,6 @@ package com.wtc.conversation;
 import com.wtc.auth.AccessControlService;
 import com.wtc.conversation.dto.ConversationResponse;
 import com.wtc.conversation.dto.CreateConversationRequest;
-import com.wtc.conversation.dto.StartClientConversationRequest;
 import com.wtc.message.ChatMessageService;
 import com.wtc.message.dto.ChatMessageRequest;
 import com.wtc.message.dto.MessageResponse;
@@ -27,19 +26,16 @@ public class ConversationController {
     private final ListConversationService listConversationService;
     private final ChatMessageService chatMessageService;
     private final CreateConversationService createConversationService;
-    private final StartClientConversationService startClientConversationService;
     private final AccessControlService accessControl;
 
     // Construtor atualizado injetando os serviços necessários
     public ConversationController(ListConversationService listConversationService,
                                   ChatMessageService chatMessageService,
                                   CreateConversationService createConversationService,
-                                  StartClientConversationService startClientConversationService,
                                   AccessControlService accessControl) {
         this.listConversationService = listConversationService;
         this.chatMessageService = chatMessageService;
         this.createConversationService = createConversationService;
-        this.startClientConversationService = startClientConversationService;
         this.accessControl = accessControl;
     }
 
@@ -57,15 +53,6 @@ public class ConversationController {
         accessControl.checkCustomerAccess(request.customerId());
         ConversationResponse created = createConversationService.execute(request.customerId());
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
-    }
-
-    @PostMapping("/with-client")
-    @Operation(
-            summary = "Iniciar conversa com um cliente por e-mail",
-            description = "Operador abre (ou reaproveita) uma conversa com uma conta de cliente informada por e-mail.")
-    public ResponseEntity<ConversationResponse> startWithClient(@RequestBody @Valid StartClientConversationRequest request) {
-        ConversationResponse conversation = startClientConversationService.startWithClient(request.email());
-        return ResponseEntity.status(HttpStatus.CREATED).body(conversation);
     }
 
     @PostMapping("/{conversationId}/messages")

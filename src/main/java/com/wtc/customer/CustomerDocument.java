@@ -14,6 +14,7 @@ public class CustomerDocument {
 
     private String name;
     private String document;
+    private String email; // e-mail da conta do cliente, quando o contato é vinculado a um login
 
     private Boolean vip;
     private Boolean fidelidade;
@@ -52,6 +53,14 @@ public class CustomerDocument {
 
     public void setDocument(String document) {
         this.document = document;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public Boolean getVip() {

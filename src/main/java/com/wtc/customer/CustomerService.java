@@ -1,5 +1,7 @@
 package com.wtc.customer;
 import com.wtc.auth.AccessControlService;
+import com.wtc.conversation.StartClientConversationService;
+import com.wtc.conversation.dto.ConversationResponse;
 import com.wtc.customer.dto.CreateCustomerRequest;
 import com.wtc.customer.dto.CustomerResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +27,26 @@ public class CustomerService {
     @Autowired
     private AccessControlService accessControl;
 
-    public CustomerResponse create(CreateCustomerRequest request) {
+    @Autowired
+    private StartClientConversationService startClientConversationService;
 
-        CustomerDocument customer = new CustomerDocument();
+    public CustomerResponse create(CreateCustomerRequest request) {
+        String email = request.getEmail();
+        boolean linkToClient = email != null && !email.isBlank();
+
+        CustomerDocument customer;
+        if (linkToClient) {
+            // Vincula o contato a uma conta de cliente existente: garante a conversa
+            // compartilhada operador↔cliente e usa o id do cliente como id do contato,
+            // de modo que o operador e o cliente enxerguem a mesma conversa.
+            ConversationResponse conversation = startClientConversationService.startWithClient(email);
+            customer = repository.findById(conversation.customerId()).orElseGet(CustomerDocument::new);
+            customer.setId(conversation.customerId());
+            customer.setEmail(email.trim());
+        } else {
+            customer = new CustomerDocument();
+        }
+
         customer.setOwnerId(accessControl.currentUser().getId()); // dono = operador atual
         customer.setName(request.getName());
         customer.setDocument(request.getDocument());
@@ -36,7 +55,9 @@ public class CustomerService {
         customer.setFidelidade(Boolean.TRUE.equals(request.getFidelidade()));
         customer.setAtivo(Boolean.TRUE.equals(request.getAtivo()));
 
-        customer.setCreatedAt(LocalDateTime.now());
+        if (customer.getCreatedAt() == null) {
+            customer.setCreatedAt(LocalDateTime.now());
+        }
 
         repository.save(customer);
 

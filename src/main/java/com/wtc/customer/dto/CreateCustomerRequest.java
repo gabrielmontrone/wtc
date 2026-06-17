@@ -1,4 +1,5 @@
 package com.wtc.customer.dto;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import jakarta.validation.constraints.Pattern;
@@ -14,6 +15,11 @@ public class CreateCustomerRequest {
     @Pattern(regexp = "\\d+", message = "Documento deve conter apenas números")
     private String document;
 
+    // Opcional: e-mail da conta do cliente. Quando informado, o contato é vinculado a esse
+    // login e o operador passa a compartilhar a conversa com ele.
+    @Email(message = "E-mail inválido")
+    private String email;
+
     private Boolean vip;
     private Boolean fidelidade;
     private Boolean ativo;
@@ -26,6 +32,14 @@ public class CreateCustomerRequest {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getDocument() {
