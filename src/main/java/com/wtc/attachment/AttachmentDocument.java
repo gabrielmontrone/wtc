@@ -11,11 +11,9 @@ public class AttachmentDocument {
     private String fileName;
     private String contentType; // ex: image/png, video/mp4
     private Long fileSize;      // tamanho em bytes
-    private String s3Key;       // o caminho do arquivo lá na nuvem
-    private String url;         // o link final para acessar
+    private byte[] content;     // conteúdo do arquivo armazenado no próprio backend
     private String messageId;   // A qual mensagem esse anexo pertence
     private Instant createdAt;
-    private String status; // Pending ou Uploaded
 
     public String getId() {
         return id;
@@ -49,20 +47,12 @@ public class AttachmentDocument {
         this.fileSize = fileSize;
     }
 
-    public String getS3Key() {
-        return s3Key;
+    public byte[] getContent() {
+        return content;
     }
 
-    public void setS3Key(String s3Key) {
-        this.s3Key = s3Key;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
+    public void setContent(byte[] content) {
+        this.content = content;
     }
 
     public String getMessageId() {
@@ -79,13 +69,5 @@ public class AttachmentDocument {
 
     public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
     }
 }

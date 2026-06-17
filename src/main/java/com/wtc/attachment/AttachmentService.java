@@ -1,10 +1,7 @@
 package com.wtc.attachment;
 
-import com.wtc.attachment.dto.UploadRequest;
-import com.wtc.attachment.dto.UploadResponse;
 import org.springframework.stereotype.Service;
 import java.time.Instant;
-import java.util.UUID;
 
 @Service
 public class AttachmentService {
@@ -12,49 +9,32 @@ public class AttachmentService {
     private static final long MAX_FILE_SIZE_BYTES = 10L * 1024 * 1024; // 10MB
 
     private final AttachmentRepository repository;
-    private final S3Service s3Service;
 
-    public AttachmentService(AttachmentRepository repository, S3Service s3Service) {
+    public AttachmentService(AttachmentRepository repository) {
         this.repository = repository;
-        this.s3Service = s3Service;
     }
 
-    public UploadResponse prepareUpload(UploadRequest request) {
-        // 1. Validar tamanho (Critério de aceitação: limite de 10MB)
-        if (request.fileSize() > MAX_FILE_SIZE_BYTES) {
-            throw new RuntimeException("Arquivo muito grande! Limite de 10MB.");
+    /** Stores the uploaded bytes in MongoDB and returns the generated attachment id. */
+    public String store(String fileName, String contentType, byte[] content) {
+        if (content == null || content.length == 0) {
+            throw new IllegalArgumentException("Arquivo vazio.");
+        }
+        if (content.length > MAX_FILE_SIZE_BYTES) {
+            throw new IllegalArgumentException("Arquivo muito grande! Limite de 10MB.");
         }
 
-        // 2. Gerar um nome único para o arquivo no S3
-        String s3Key = UUID.randomUUID() + "-" + request.fileName();
-
-        // 3. Gerar a URL pré-assinada (Onde o usuário vai fazer o upload)
-        String uploadUrl = s3Service.generatePresignedUrl(s3Key, request.contentType());
-
-        // 4. URL pública que será usada para exibir o arquivo após o upload
-        String fileUrl = s3Service.getPublicUrl(s3Key);
-
-        // 5. Salvar metadados no MongoDB (Critério: persistir metadados)
         AttachmentDocument doc = new AttachmentDocument();
-        doc.setFileName(request.fileName());
-        doc.setContentType(request.contentType());
-        doc.setFileSize(request.fileSize());
-        doc.setS3Key(s3Key);
-        doc.setUrl(fileUrl);
-        doc.setStatus("PENDING");
+        doc.setFileName(fileName);
+        doc.setContentType(contentType);
+        doc.setFileSize((long) content.length);
+        doc.setContent(content);
         doc.setCreatedAt(Instant.now());
 
-        AttachmentDocument saved = repository.save(doc);
-
-        return new UploadResponse(saved.getId(), uploadUrl, fileUrl);
+        return repository.save(doc).getId();
     }
 
-    public void confirmUpload(String attachmentId, String messageId) {
-        AttachmentDocument doc = repository.findById(attachmentId)
+    public AttachmentDocument get(String id) {
+        return repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Anexo não encontrado"));
-
-        doc.setStatus("UPLOADED");
-        doc.setMessageId(messageId); // Aqui associamos o arquivo à mensagem do chat
-        repository.save(doc);
     }
 }

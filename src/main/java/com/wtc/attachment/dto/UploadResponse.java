@@ -1,7 +1,12 @@
 package com.wtc.attachment.dto;
 
+/**
+ * Result of storing an attachment in the backend.
+ *
+ * @param id  generated attachment id
+ * @param url relative path to download/display it ("/api/v1/attachments/{id}")
+ */
 public record UploadResponse(
-        String attachmentId,
-        String uploadUrl, // Esta é a URL pré-assinada (PUT) para enviar os bytes
-        String fileUrl    // URL pública para baixar/exibir o arquivo após o upload
+        String id,
+        String url
 ) {}
