@@ -85,7 +85,8 @@ public class ChatMessageService {
         // 4. Trilha de compliance: registra mensagens com dados sensíveis / links suspeitos
         if (risk.isSuspicious()) {
             auditService.log("SUSPICIOUS_MESSAGE", currentUser.getEmail(),
-                    "Conversa " + conversationId + " — risco " + risk.level().name() + " " + risk.summary());
+                    "Conversa " + conversationId + " — risco " + risk.level().name() + " " + risk.summary(),
+                    risk.level().name());
         }
 
         return toResponse(savedMessage);

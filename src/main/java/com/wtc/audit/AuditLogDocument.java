@@ -13,6 +13,7 @@ public class AuditLogDocument {
     private String details;     // Descrição extra
     private String timestamp;   // Quando foi feito
     private String correlationId; // ID único da requisição (para rastrear no log)
+    private String riskLevel;   // NONE/LOW/MEDIUM/HIGH em eventos de mensagem (null nos demais)
 
     public String getId() {
         return id;
@@ -60,5 +61,13 @@ public class AuditLogDocument {
 
     public void setCorrelationId(String correlationId) {
         this.correlationId = correlationId;
+    }
+
+    public String getRiskLevel() {
+        return riskLevel;
+    }
+
+    public void setRiskLevel(String riskLevel) {
+        this.riskLevel = riskLevel;
     }
 }

@@ -13,10 +13,15 @@ public class AuditService {
     }
 
     public void log(String action, String userEmail, String details) {
+        log(action, userEmail, details, null);
+    }
+
+    public void log(String action, String userEmail, String details, String riskLevel) {
         AuditLogDocument doc = new AuditLogDocument();
         doc.setAction(action);
         doc.setUserEmail(userEmail);
         doc.setDetails(details);
+        doc.setRiskLevel(riskLevel);
         doc.setTimestamp(Instant.now().toString());
         doc.setCorrelationId(MDC.get("correlationId"));
 
