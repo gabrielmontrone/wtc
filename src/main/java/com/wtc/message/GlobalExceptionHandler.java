@@ -37,6 +37,18 @@ public class GlobalExceptionHandler {
         );
     }
 
+    @org.springframework.web.bind.annotation.ExceptionHandler(org.springframework.security.access.AccessDeniedException.class)
+    public ResponseEntity<ErrorResponse> handleAccessDenied(org.springframework.security.access.AccessDeniedException ex) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
+                new ErrorResponse(
+                        Instant.now(),
+                        HttpStatus.FORBIDDEN.value(),
+                        "Forbidden",
+                        List.of(ex.getMessage())
+                )
+        );
+    }
+
     @org.springframework.web.bind.annotation.ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidation(MethodArgumentNotValidException ex) {
         List<String> details = ex.getBindingResult()

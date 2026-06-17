@@ -1,5 +1,6 @@
 package com.wtc.message;
 
+import com.wtc.auth.AccessControlService;
 import com.wtc.message.dto.MessageResponse;
 import com.wtc.message.dto.SendMessageRequest;
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,9 +25,13 @@ public class MessageController {
 
     private final ListMessageService listMessageService;
 
-    public MessageController(SendMessageService sendMessageService, ListMessageService listMessageService) {
+    private final AccessControlService accessControl;
+
+    public MessageController(SendMessageService sendMessageService, ListMessageService listMessageService,
+                             AccessControlService accessControl) {
         this.sendMessageService = sendMessageService;
         this.listMessageService = listMessageService;
+        this.accessControl = accessControl;
     }
 
     @PostMapping
@@ -40,6 +45,7 @@ public class MessageController {
     @GetMapping("/conversation/{conversationId}")
     @Operation(summary = "Obter histórico de mensagens da conversa", description = "Retorna as mensagens de uma conversa.")
     public ResponseEntity<List<MessageResponse>> getHistory(@Parameter(description = "ID da conversa") @PathVariable String conversationId) {
+        accessControl.checkConversationAccess(conversationId);
         var history = listMessageService.execute(conversationId);
         return ResponseEntity.ok(history);
     }

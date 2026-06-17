@@ -1,5 +1,6 @@
 package com.wtc.conversation;
 
+import com.wtc.auth.AccessControlService;
 import com.wtc.conversation.dto.ConversationResponse;
 import com.wtc.conversation.dto.CreateConversationRequest;
 import com.wtc.message.ChatMessageService;
@@ -25,19 +26,23 @@ public class ConversationController {
     private final ListConversationService listConversationService;
     private final ChatMessageService chatMessageService;
     private final CreateConversationService createConversationService;
+    private final AccessControlService accessControl;
 
     // Construtor atualizado injetando os serviços necessários
     public ConversationController(ListConversationService listConversationService,
                                   ChatMessageService chatMessageService,
-                                  CreateConversationService createConversationService) {
+                                  CreateConversationService createConversationService,
+                                  AccessControlService accessControl) {
         this.listConversationService = listConversationService;
         this.chatMessageService = chatMessageService;
         this.createConversationService = createConversationService;
+        this.accessControl = accessControl;
     }
 
     @GetMapping("/customer/{customerId}")
     @Operation(summary = "Listar conversas do cliente", description = "Retorna todas as conversas de um cliente.")
     public ResponseEntity<List<ConversationResponse>> getList(@Parameter(description = "ID do cliente") @PathVariable String customerId) {
+        accessControl.checkCustomerAccess(customerId);
         List<ConversationResponse> conversations = listConversationService.execute(customerId);
         return ResponseEntity.ok(conversations);
     }
@@ -45,6 +50,7 @@ public class ConversationController {
     @PostMapping
     @Operation(summary = "Iniciar conversa", description = "Cria uma nova conversa ABERTA para um cliente existente.")
     public ResponseEntity<ConversationResponse> create(@RequestBody @Valid CreateConversationRequest request) {
+        accessControl.checkCustomerAccess(request.customerId());
         ConversationResponse created = createConversationService.execute(request.customerId());
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
@@ -54,6 +60,7 @@ public class ConversationController {
     public ResponseEntity<MessageResponse> sendReply(
             @Parameter(description = "ID da conversa") @PathVariable String conversationId,
             @RequestBody @Valid ChatMessageRequest request) {
+        accessControl.checkConversationAccess(conversationId);
         return ResponseEntity.ok(chatMessageService.sendReply(conversationId, request));
     }
 }

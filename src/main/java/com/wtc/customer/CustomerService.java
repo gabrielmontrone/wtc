@@ -1,4 +1,5 @@
 package com.wtc.customer;
+import com.wtc.auth.AccessControlService;
 import com.wtc.customer.dto.CreateCustomerRequest;
 import com.wtc.customer.dto.CustomerResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -6,6 +7,7 @@ import org.springframework.data.domain.*;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -20,9 +22,13 @@ public class CustomerService {
     @Autowired
     private MongoTemplate mongoTemplate;
 
+    @Autowired
+    private AccessControlService accessControl;
+
     public CustomerResponse create(CreateCustomerRequest request) {
 
         CustomerDocument customer = new CustomerDocument();
+        customer.setOwnerId(accessControl.currentUser().getId()); // dono = operador atual
         customer.setName(request.getName());
         customer.setDocument(request.getDocument());
 
@@ -42,6 +48,10 @@ public class CustomerService {
         CustomerDocument customer = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
 
+        if (!accessControl.currentUser().getId().equals(customer.getOwnerId())) {
+            throw new AccessDeniedException("Contato pertence a outra conta.");
+        }
+
         return toResponse(customer);
     }
 
@@ -51,6 +61,9 @@ public class CustomerService {
                                        Pageable pageable) {
 
         Query query = new Query().with(pageable);
+
+        // Isolamento por conta: o operador só enxerga os contatos que criou.
+        query.addCriteria(Criteria.where("ownerId").is(accessControl.currentUser().getId()));
 
         if (vip != null) {
             query.addCriteria(Criteria.where("vip").is(vip));

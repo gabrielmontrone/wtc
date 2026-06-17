@@ -10,6 +10,8 @@ public class CustomerDocument {
     @Id
     private String id;
 
+    private String ownerId; // ID do operador dono deste contato (isolamento por conta)
+
     private String name;
     private String document;
 
@@ -26,6 +28,14 @@ public class CustomerDocument {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(String ownerId) {
+        this.ownerId = ownerId;
     }
 
     public String getName() {

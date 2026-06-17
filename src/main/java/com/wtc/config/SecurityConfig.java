@@ -34,8 +34,12 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/v1/auth/register").permitAll()
                         .requestMatchers("/api/v1/messages/**").authenticated()
                         .requestMatchers(HttpMethod.POST, "/api/v1/conversations/*/messages").authenticated()
+                        .requestMatchers("/api/v1/conversations/**").authenticated()
                         .requestMatchers("/api/v1/attachments/**").authenticated()
-                        .requestMatchers(HttpMethod.GET, "/api/v1/audit/**").authenticated()
+                        // Recursos exclusivos do operador (CRM, campanhas, segmentos, auditoria)
+                        .requestMatchers("/api/v1/audit/**").hasRole("OPERADOR")
+                        .requestMatchers("/customers/**").hasRole("OPERADOR")
+                        .requestMatchers("/api/v1/segments/**").hasRole("OPERADOR")
                         .requestMatchers("/api/v1/campaigns/**").hasRole("OPERADOR")
                         .requestMatchers("/api/v1/customers/*/observations").hasRole("OPERADOR")
                         .requestMatchers(
