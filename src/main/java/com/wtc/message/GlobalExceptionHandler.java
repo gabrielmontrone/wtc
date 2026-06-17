@@ -67,6 +67,18 @@ public class GlobalExceptionHandler {
         );
     }
 
+    @org.springframework.web.bind.annotation.ExceptionHandler(org.springframework.web.server.ResponseStatusException.class)
+    public ResponseEntity<ErrorResponse> handleResponseStatus(org.springframework.web.server.ResponseStatusException ex) {
+        return ResponseEntity.status(ex.getStatusCode()).body(
+                new ErrorResponse(
+                        Instant.now(),
+                        ex.getStatusCode().value(),
+                        HttpStatus.valueOf(ex.getStatusCode().value()).getReasonPhrase(),
+                        List.of(ex.getReason() != null ? ex.getReason() : "")
+                )
+        );
+    }
+
     @org.springframework.web.bind.annotation.ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGeneric(Exception ex) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(

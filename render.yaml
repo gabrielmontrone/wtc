@@ -22,3 +22,8 @@ services:
       # Render generates a strong random JWT secret for you.
       - key: JWT_SECRET
         generateValue: true
+      # Google Sign-In (optional). Set this in the Render dashboard to the same OAuth 2.0
+      # "Web application" client ID the Android app uses (google_web_client_id). Leave it
+      # unset to keep Google Sign-In disabled — the endpoint then returns 503, not 500.
+      - key: GOOGLE_CLIENT_ID
+        sync: false
